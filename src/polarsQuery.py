@@ -1,6 +1,8 @@
 import argparse
 import json
 import sys
+from os import getcwd
+
 import polars as pl
 
 class JSONQueryEngine:
@@ -42,9 +44,11 @@ class JSONQueryEngine:
     def format_output(self, df: pl.DataFrame, format: str = 'table') -> str:
         """Format output according to specified format"""
         if format == 'json':
-            return df.write_json('./queryResults.json')
+            df.write_json('./queryResults.json')
+            return f"Results saved in {getcwd()}"
         elif format == 'csv':
-            return df.write_csv('./queryResults.csv')
+            df.write_csv('./queryResults.csv')
+            return f"Results saved in {getcwd()}"
         else:  # default to table
             return df
 
@@ -56,10 +60,15 @@ def main():
                        default='table', help="Output format. Default: stdout. Other supported format: csv, json.")
     parser.add_argument('--separator', 
                        default=',', help="Optional separator for CSV. Default: comma.\nMUST BE A SINGLE BYTE CHARACTER")
+    parser.add_argument('--rows', 
+                       default='10', help="Optional number of rows to display on table output.")
     
     args = parser.parse_args()
     
     engine = JSONQueryEngine()
+    
+    if args.format == 'table':
+    	pl.Config.set_tbl_rows(args.rows)
     
     # Read JSON file
     print(args.file)
