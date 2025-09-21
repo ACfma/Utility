@@ -30,6 +30,6 @@ zipinfo $OUTDIR/$zip_filename > $OUTDIR/"content_${timestamp}.txt"
 # If the file does not exist, create it
 touch $OUTDIR/zipped_history.log
 
-echo "Compressione ${timestamp} terminata." > $OUTDIR/zipped_history.log
-
 find $INDIR -type f -mtime +$TIME -delete
+
+echo "Process ended!" > $OUTDIR/zipped_history.log
